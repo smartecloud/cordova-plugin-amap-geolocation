@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+    <plugin id="cordova-plugin-amap-geolocation" 
+            version="0.1.0" 
+            xmlns="http://www.phonegap.com/ns/plugins/1.0" 
+            xmlns:rim="http://www.blackberry.com/ns/widgets"
+            xmlns:android="http://schemas.android.com/apk/res/android">
+
+        
+        <name>AMapLocation</name>
+        <description>AMap Location Plugin for Cordova</description>
+        <license>MIT</license>
+        <keywords>amap,location,cordova</keywords>
+        <!--
+        <repo>https://github.com/apache/cordova-plugin-geolocation</repo>
+        <issue>https://issues.apache.org/jira/browse/CB/component/12320638</issue> -->
+
+
+        <!-- <preference name="APIKey" /> -->
+        <!--<js-module src="www/AMapLocation.js" name="amapLocation">
+            <clobbers target="navigator.amapLocation" />
+        </js-module>-->
+
+
+        <!-- android -->
+        <platform name="android">
+
+            <config-file target="res/xml/config.xml" parent="/*">
+                <feature name="AMaplocation">
+                    <param name="android-package" value="cn.set.cordova.geolocation.AMapPlugin" />
+                </feature>
+            </config-file>
+
+            <config-file target="AndroidManifest.xml" parent="/manifest">
+                <!-- Required  一些系统要求的权限，如访问网络等-->
+
+                <uses-permission android:name="android.permission.INTERNET" />
+                <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+                <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+                <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+                <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+                <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+                <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+                <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+                <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
+                <uses-permission android:name="android.permission.WAKE_LOCK" />
+                <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+
+
+            </config-file>
+            <config-file target="AndroidManifest.xml" parent="/manifest/application">
+                <!-- 定位需要的服务 -->
+
+                <service android:name="com.amap.api.location.APSService"></service>
+                <meta-data android:name="com.amap.api.v2.apikey" android:value="$APIKey" />
+
+            </config-file>
+            <source-file src="src/android/AMapPlugin.java" target-dir="src/cn/set/cordova/geolocation/" />
+            <source-file src="src/android/Utils.java" target-dir="src/cn/set/cordova/geolocation/" />
+
+            <source-file src="src/android/PermissionHelper.java" target-dir="src/cn/set/cordova/geolocation/" />
+            <source-file src="src/android/libs/AMap_Location_v2.3.0_20160112.jar" target-dir="libs"/>
+
+            
+            <js-module src="www/android/AMapLocation.js" name="amapLocation">
+                <clobbers target="navigator.amapLocation" />
+            </js-module>
+            
+            <!-- We don't expose PositionError via clobber on Android as we use it internally only -->
+            <js-module src="www/PositionError.js" name="PositionError">
+                <runs />
+            </js-module>
+
+        </platform>
+
+        <!-- ios -->
+        <platform name="ios">
+
+            <js-module src="www/Coordinates.js" name="Coordinates">
+                <clobbers target="AMapCoordinates" />
+            </js-module>
+
+            <js-module src="www/PositionError.js" name="PositionError">
+                <clobbers target="AMapPositionError" />
+            </js-module>
+
+            <js-module src="www/Position.js" name="Position">
+                <clobbers target="AMapPosition" />
+            </js-module>
+
+             <js-module src="www/AMapLocation.js" name="amapLocation">
+            <clobbers target="navigator.amapLocation" />
+        </js-module> 
+
+            <config-file target="config.xml" parent="/*">
+                <feature name="AMaplocation">
+                    <param name="ios-package" value="AMapPlugin" />
+                </feature>
+            </config-file>
+
+            <header-file src="src/ios/AppDelegate+AMap.h" />
+            <source-file src="src/ios/AppDelegate+AMap.m" />
+
+            <header-file src="src/ios/AMapPlugin.h" />
+            <source-file src="src/ios/AMapPlugin.m" />
+
+            <header-file src="src/ios/APIKey.h" />
+
+
+            <framework src="src/ios/AMapLocationKit.framework" custom="true" />
+            <framework src="CoreTelephony.framework" />
+            <framework src="SystemConfiguration.framework" />
+            <framework src="CoreLocation.framework" />
+            <framework src="libz.tbd" />
+
+
+            <config-file target="*-Info.plist" parent="NSLocationWhenInUseUsageDescription">
+                <string>AMapLocationKit需要定位权限才可以使用</string>
+            </config-file>
+
+            <config-file target="*AMapConfig.plist" parent="APIKey">
+                <string>$APIKey</string>
+            </config-file>
+
+        </platform>
+
+
+    </plugin>
